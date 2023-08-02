@@ -1,0 +1,47 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+
+{% block BASE_CONTENIDO %}
+
+    <div class="row align-items-center my-5">
+        <h1 class="pb-lg-3 text-bg-light">
+            {% block INDEX_TITULO %}
+                Bienvenido!!!
+            {% endblock INDEX_TITULO %}
+        </h1>
+    </div>
+
+    {% block INDEX_CONTENIDO %}
+
+
+
+        <!-- Content Row-->
+        <div class="row gx-4 gx-lg-5">
+            <div class="col-md-4 mb-5">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">crear vehiculo</h2>
+                    </div>
+                    <div class="card-footer"><a class="btn btn-primary btn-sm" href="{%url "cliente:create"%}" >Ir</a></div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-5">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">ver vehiculos</h2>
+                    </div>
+                    <div class="card-footer"><a class="btn btn-primary btn-sm">Ir</a></div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-5">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">nose</h2>
+                    </div>
+                    <div class="card-footer"><a class="btn btn-primary btn-sm">Ir</a></div>
+                </div>
+            </div>
+        </div>
+    {% endblock INDEX_CONTENIDO %}
+
+{% endblock BASE_CONTENIDO %}
