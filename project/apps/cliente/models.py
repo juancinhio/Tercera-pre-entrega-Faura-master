@@ -7,6 +7,7 @@ class Cliente(models.Model):
     apellido = models.CharField(max_length=50)
     dni = models.CharField(max_length=50, null=True, blank=True)
     telefono = models.CharField(max_length=50, null=True, blank=True)
+    domicilio = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.nombre} {self.apellido} {self.dni} {self.telefono}"

@@ -2,47 +2,48 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from .models import AltaVehiculo, Cliente, Vehiculo
 from .forms import altaVehiculoForm
-from cliente.forms import ClienteForm
-from vehiculo.forms import VehiculoForm
 from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
     ListView,
     UpdateView,
+    FormView
 )
 
 
-class AltaVehiculoCreate(CreateView):
-    model = AltaVehiculo
+
+class AltaVehiculoCreate(FormView):
     form_class = altaVehiculoForm
     template_name = 'altaVehiculo/alta_vehiculo_form.html'
     success_url = reverse_lazy('home:home')
 
     def form_valid(self, form):
-        # Guardar AltaVehiculo
-        alta_vehiculo = form.save()
+        # Crear instancia de Cliente
+        cliente = Cliente.objects.create(
+            nombre=form.cleaned_data['cliente_nombre'],
+            apellido=form.cleaned_data['cliente_apellido'],
+            dni=form.cleaned_data['cliente_dni'],
+            telefono=form.cleaned_data['cliente_telefono'],
+            domicilio=form.cleaned_data['cliente_domicilio']
+        )
 
-        # Crear formularios de Cliente y Vehiculo
-        cliente_form = ClienteForm(self.request.POST)
-        vehiculo_form = VehiculoForm(self.request.POST)
+        # Crear instancia de Vehiculo
+        vehiculo = Vehiculo.objects.create(
+            marca=form.cleaned_data['vehiculo_marca'],
+            modelo=form.cleaned_data['vehiculo_modelo'],
+            año=form.cleaned_data['vehiculo_año'],
+            patente=form.cleaned_data['vehiculo_patente'],
+            km=form.cleaned_data['vehiculo_km']
+        )
 
-        if cliente_form.is_valid() and vehiculo_form.is_valid():
-            # Guardar Cliente y Vehiculo
-            cliente = cliente_form.save()
-            vehiculo = vehiculo_form.save(commit=False)
-            vehiculo.cliente = cliente
-            vehiculo.save()
+        # Crear instancia de AltaVehiculo con las relaciones a Cliente y Vehiculo
+        alta_vehiculo = AltaVehiculo.objects.create(
+            cliente_id=cliente,
+            vehiculo_id=vehiculo,
+            # Asignar otros campos de AltaVehiculo aquí
+        )
 
-            # Asignar relacion a AltaVehiculo
-            alta_vehiculo.cliente = cliente
-            alta_vehiculo.vehiculo = vehiculo
-            alta_vehiculo.save()
-
-            return redirect(self.get_success_url())
-
-        # Si alguno de los formularios no es válido, renderizar el formulario nuevamente
-        return self.form_invalid(form)
-    
+        return redirect(self.success_url)
 class AltaVehiculoDetail(DetailView):
     model = AltaVehiculo
